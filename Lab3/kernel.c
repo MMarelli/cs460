@@ -60,7 +60,7 @@ PROC *kfork(char *filename)  /*/ create a child process, begin from body()*/
 	for (i=1; i<12; i++)			/* saved CPU registers changed to i < 12 from i < 10*/
 		p->kstack[SSIZE-i]= 0;		/* all 0's*/
 	p->kstack[SSIZE-1] = (int)body;	/* resume point=address of body()*/
-	p->ksp = &p->kstack[SSIZE-11];	/* proc saved sp changed to ssize-11 from ssize -9*/
+	p->ksp = &(p->kstack[SSIZE-11]);	/* proc saved sp changed to ssize-11 from ssize -9*/
 	p->kstack[SSIZE - 11] = 0x1000;
 	p->kstack[SSIZE - 10] = 0x1000;
 
@@ -71,15 +71,15 @@ PROC *kfork(char *filename)  /*/ create a child process, begin from body()*/
 	}
 
 	/*initialize user stack*/
-	put_word(segment, segment, segment -12 * 2); /*set uDS*/
-	put_word(segment, segment, segment -11 * 2); /*set uES*/
+	put_word(segment, segment, segment - 12 * 2); /*set uDS*/
+	put_word(segment, segment, segment - 11 * 2); /*set uES*/
 
 	for(i = 3; i < 11; i++) /*Set CPU registers in user stack and PC to 0*/
 	{
 		put_word(0, segment, segment - i * 2);
 	}
 	put_word(segment, segment, segment - 2 * 2); /*set uCS*/
-	put_word(0x0200, segment, segment - 1 * 2); /*set flag to 0*/
+	put_word(0, segment, segment - 1 * 2); /*set flag to 0*/
 	p->uss = segment;
 	p->usp = segment-24;
 
@@ -104,7 +104,7 @@ int do_exit()
 {
 	int code;
 	printf("Enter exit code:");
-	code = getc() - '0';
+	code = geti();
 	printf("Exiting with code: %d\n", code);
 	kexit(code);
 }
@@ -121,7 +121,7 @@ int do_continue()
 	int pid, i;
 
 	printf("Enter pid to continue:");
-	pid = getc() - '0';
+	pid = geti();
 	if(pid < 0 || pid >= NPROC)
 	{
 		printf("pid out of range");
@@ -146,7 +146,7 @@ int do_sleep()
 {
 	int event;
 	printf("Enter sleep event code:");
-	event = getc() - '0';
+	event = geti();
 
 	ksleep(event);
 }
@@ -155,7 +155,7 @@ int do_wakeup()
 {
 	int event;
 	printf("Enter wakeup event code:");
-	event = getc() - '0';
+	event = geti();
 
 	wakeup(event);
 }
@@ -220,7 +220,7 @@ int do_chpriority()
 {
 	int pid, pri;
 	printf("input pid ");
-	pid = getc() - '0';
+	pid = geti();
 	if(pri<1)
 	{
 		pri = 1;

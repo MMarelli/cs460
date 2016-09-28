@@ -98,3 +98,10 @@ void printList(char *name, PROC *queue)
         printf(" -> NULL\n");
     }
 }
+
+int geti()
+{
+	char s[32];
+	gets(s);
+	return atoi(s);
+}

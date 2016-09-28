@@ -1,39 +1,28 @@
 // ucode.c file
+
 char *cmd[]={"getpid", "ps", "chname", "kfork", "switch", "wait", "exit", 0};
 
 #define LEN 64
 
 int show_menu()
 {
-   printf("***************** Menu *******************\n");
-   printf("*  ps  chname  kfork  switch  wait  exit *\n");
-   printf("******************************************\n");
+   printf("******************* Menu **********************\n");
+   printf("*    ps  chname  kfork  switch  wait  exit    *\n");
+   printf("***********************************************\n");
 }
 
 int find_cmd(char *name)
 {
-  int i = 0, j;
-  while(cmd[i])
-  {
-    /*
-    for(j = 0; cmd[i][j] != '\0' &&  name[j] != '\0'; j++)
+  // return command index
+    int i;
+
+    for (i = 0; cmd[i]; i++)
     {
-      if(cmd[i][j] != name[j])
-      {
-        break;
-      }
+        if (!strcmp(cmd[i], name))
+            return i;
     }
-    if(cmd[i][j] == name[j])
-    {
-      return i;
-    }*/
-    if(!strcmp(cmd[i], name))
-    {
-      return i;
-    }
-    i++;
-  }
-  return -1; 
+    
+    return -1;
 }
 
 int getpid()
@@ -43,6 +32,7 @@ int getpid()
 
 int ps()
 {
+  printf("kernel: ps...\n");
    return syscall(1, 0, 0);
 }
 
@@ -58,6 +48,7 @@ int kfork()
 {   
   int child, pid;
   pid = getpid();
+  printf("kernel: fork child\n");
   printf("proc %d enter kernel to kfork a child\n", pid); 
   child = syscall(3, 0, 0);
   printf("proc %d kforked a child %d\n", pid, child);
@@ -65,7 +56,8 @@ int kfork()
 
 int kswitch()
 {
-    return syscall(4,0,0);
+  printf("kernel: switch...\n");
+  return syscall(4,0,0);
 }
 
 int wait()

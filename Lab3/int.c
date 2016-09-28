@@ -34,7 +34,8 @@ int kcinth()
    }
 
 /*==> WRITE CODE to let r be the return value to Umode*/
-   put_word(r, segment, offset + 2);
+   put_word(r, segment, offset + 16);
+   return r;
 }
 
 /*//============= WRITE C CODE FOR syscall functions ======================*/
@@ -67,10 +68,11 @@ int kps()
     /*WRITE C code to print PROC information*/
   int i;
   printf("************************************\n");
-  printf("Name: \t Status \t pid \t ppid\n");
+  printf("Name:     Status     pid     ppid\n");  
+  printf("************************************\n");
   for(i = 0; i < NPROC; i++)
   {
-    printf("%s \t %s \t %d \t ", proc[i].name, getStatusString(proc[i].status), i);
+    printf("%s     %s     %d     ", proc[i].name, getStatusString(proc[i].status), i);
     if(proc[i].status == FREE)
     {
       printf("\n");

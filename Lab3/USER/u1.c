@@ -2,14 +2,14 @@
 int color;
 main()
 { 
-  char name[64]; 
+  char name[64];
   int pid, cmd;
   
   while(1){
     pid = getpid();
     color = 0x0C;
        
-    printf("----------------------------------------------\n");
+    printf("***********************************************\n");
     printf("I am proc %d in U mode: running segment=%x\n",getpid(), getcs());
     show_menu();
     printf("Command ? ");
