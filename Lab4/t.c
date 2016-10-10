@@ -1,3 +1,18 @@
+/********************************************************************
+Copyright 2010-2015 K.C. Wang, <kwang@eecs.wsu.edu>
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+********************************************************************/
 #include "type.h"
 
 PROC proc[NPROC], *running, *freeList, *readyQueue, *sleepList;
@@ -11,26 +26,24 @@ char *pname[]={"Sun", "Mercury", "Venus", "Earth",  "Mars", "Jupiter",
 /**************************************************
   bio.o, queue.o loader.o are in mtxlib
 **************************************************/
-/* #include "bio.c" */
-/* #include "queue.c" */
-/* #include "loader.c" */
 
-#include "wait.c"             // YOUR wait.c   file
-#include "kernel.c"           // YOUR kernel.c file
-#include "int.c"              // YOUR int.c    file
-int color;
+#include "kernel.c"
+#include "int.c"
 
 int init()
 {
-    PROC *p; int i;
-    color = 0x0C;
+    PROC *p;
+    int i;
+    color= 0x0A;
     printf("init ....");
+
     for (i=0; i<NPROC; i++){   // initialize all procs
         p = &proc[i];
         p->pid = i;
         p->status = FREE;
         p->priority = 0;  
         strcpy(proc[i].name, pname[i]);
+   
         p->next = &proc[i+1];
     }
     freeList = &proc[0];      // all procs are in freeList
@@ -49,32 +62,37 @@ int init()
 
 int scheduler()
 {
-    if (running->status == READY)
-        enqueue(&readyQueue, running);
-     running = dequeue(&readyQueue);
-     color = running->pid + 0x0A;
+    if (running->status == RUNNING){
+       running->status = READY;
+       enqueue(&readyQueue, running);
+    }
+    running = dequeue(&readyQueue);
+    running->status = RUNNING;
 }
 
 int int80h();
-int set_vector(u16 segment, u16 handler)
+
+int set_vec(u16 vector, u16 addr)
 {
-     // put_word(word, segment, offset)
-     put_word(handler, 0, vector<<2);
-     put_word(0x1000,  0,(vector<<2) + 2);
+    u16 location,cs;
+    location = vector << 2;
+    put_word(addr, 0, location);
+    put_word(0x1000,0,location+2);
 }
             
 main()
 {
     printf("MTX starts in main()\n");
     init();      // initialize and create P0 as running
-    set_vector(80, int80h);
+    set_vec(80,int80h);
 
     kfork("/bin/u1");     // P0 kfork() P1
-
     while(1){
       printf("P0 running\n");
+      if (nproc==2 && proc[1].status != READY)
+	  printf("no runable process, system halts\n");
       while(!readyQueue);
       printf("P0 switch process\n");
-      tswitch();         // P0 switch to run P1
+      tswitch();   // P0 switch to run P1
    }
 }

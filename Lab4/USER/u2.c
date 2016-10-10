@@ -4,19 +4,23 @@ int color;
 main(int argc, char *argv[])
 { 
   char name[64]; int pid, cmd, segment, i;
-  pid = getpid();
-  color = 0x000B + (pid % 5);  // avoid black on black baground
 
-  printf("enter main() : argc = %d\n", argc);
+  pid = getpid();
+  color = 0x0000B + (pid % 5);
+ 
+  printf("enter main : argc = %d\n", argc);
   for (i=0; i<argc; i++)
     printf("argv[%d] = %s\n", i, argv[i]);
  
+
   while(1){
        pid = getpid();
-       color = 0x000B + (pid % 5);
-       segment = (pid+1)*0x1000;   
+       segment = (pid+1)*0x1000;
+       color = 0x0000B + (pid % 5);
+
        printf("==============================================\n");
-       printf("This is proc %din U mode: segment=%x\n", pid, segment);
+       printf("Das ist Prozess %din der U Weise: Segment=%x\n",
+	      pid,segment);
        show_menu();
        printf("Command ? ");
        gets(name); 
@@ -41,5 +45,7 @@ main(int argc, char *argv[])
        } 
   }
 }
+
+
 
 

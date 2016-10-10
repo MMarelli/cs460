@@ -1,0 +1,13 @@
+VFD=../mtximage
+
+mount -o loop $VFD /mnt
+rm /mnt/bin/*
+umount /mnt
+
+echo ------------- Here we go -------------
+
+./mku u1
+./mku u2
+
+
+echo ------------- There we went -------------
