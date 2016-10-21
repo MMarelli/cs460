@@ -27,6 +27,17 @@ typedef struct proc{
     int    event;
     int    exitCode;
     char   name[32];
-    int    time;
     int    kstack[SSIZE];      // per proc stack area
 }PROC;
+
+typedef struct tq
+{
+    struct  tq *next; //next element pointer
+    int time;   //requested time
+    struct PROC *proc; //pointer to proc
+}TQE;
+
+TQE *tq, tqe[NPROC];  //tq = timer queue poiner;
+
+int enqueuTimer(PROC* p, int wait);
+int decrementTimer();

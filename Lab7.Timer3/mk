@@ -8,6 +8,7 @@ mount -o loop $VFD /mnt
 cp mtx /mnt/boot
 umount /mnt
 
-(cd USER; ./mkallu)
+cd USER
+./mkallu
 
 echo done

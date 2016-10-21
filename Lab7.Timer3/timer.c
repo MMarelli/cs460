@@ -59,7 +59,7 @@ int thandler()
 
   if(!(++tick%60))
   {
-    tick = 0;
+    decrementTimer();
     seconds++;
     if(!(seconds%60))
     { 
@@ -86,18 +86,72 @@ int thandler()
   row - orig_row;
 
   out_byte(0x20, 0x20);
+}
 
-  if((tick == 0) && 1==running->inkmode)
-  {
-    running->time--;
-    if(running->time <= 0)
+int enqueueTimer(PROC* p, int wait)
+{
+    TQE *e = &tqe[p->pid];
+    TQE *cur = tq;
+
+    lock();
+    printf("Goint to sleep for %d\n", wait);
+    e->proc = p;
+
+    if(!tq)
     {
-      printf("Times up! Switching procs\n");
-      tswitch();
+        e->next = 0;
+        e->time = wait;
+        tq = e;
     }
     else
     {
-      printf("Proc %d Time left: %d seconds\n", running->pid, running->time);
+        if(wait < tq->time)
+        {
+            e->next = tq;
+            e->time = wait;
+            tq = e;
+        }
+        else
+        {
+            while(cur->next && wait > cur->next->time)
+            {
+                wait -= cur->next->time;
+                cur = cur->next;
+            }
+            if(!cur->next)
+            {
+                e->time = wait;
+                e->next = 0;
+                cur->next = e;
+            }
+            else
+            {
+                e->next = cur->next;
+                e->time = wait;
+                cur->next->time -= wait;
+                cur->next = e;
+            }
+        }
     }
+    unlock();
+    ksleep(&e->time);
+}
+
+int decrementTimer()
+{
+  if(!tq)
+  {
+    return;
   }
+
+  lock();
+
+  tq->time--;
+  while(tq && tq->time <= 0)
+  {
+    kwakeup(&tq->time);
+    tq = tq->next;
+  }
+
+  unlock();
 }

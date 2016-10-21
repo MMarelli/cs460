@@ -3,28 +3,17 @@ int color;
 
 main(int argc, char *argv[])
 { 
-  char name[64]; int pid, ppid, cmd, segment, i, j;
+  char name[64]; int pid, cmd, segment, i;
  
   while(1){
        pid = getpid();
-       ppid = getppid();
        color = 0x000B + (pid % 5);
-
-       printf("pid: %d    ppid: %d\n", pid, ppid);
-       //while(1); //busy wait
-       for(i = 0; i < 32767; i++)
-       {
-          for(j = 0; j < 32767; j++)
-          {
-          }
-        }
-        /*
        segment = (pid+1)*0x1000;   
        printf("==============================================\n");
        printf("I am proc %din U mode: segment=%x\n", pid, segment);
        show_menu();
        printf("Command ? ");
-      /* gets(name); 
+       gets(name); 
        if (name[0]==0) 
            continue;
 
@@ -41,10 +30,11 @@ main(int argc, char *argv[])
            case 6 : exit();     break;
            case 7 : fork();     break;
            case 8 : exec();     break;
-           case 9 : do_vfork(); break;
+           case 9 : startItimer(); 
+                                break;
 
            default: invalid(name); break;
-       }*/
+       } 
   }
 }
 

@@ -13,10 +13,6 @@ int kcinth()
 
    segment = running->uss; 
    offset = running->usp;
-   /*if(running->inkmode)
-   {
-    running->inkmode = 0;
-   }*/
 
    a = get_word(segment, offset + 2*PA);
    b = get_word(segment, offset + 2*PB);
@@ -34,9 +30,9 @@ int kcinth()
         
        case 7 : r = fork();           break;
        case 8 : r = exec(b);          break;
-
-       case 9 : r = running->ppid;    break;
        
+       case 25: r = enqueueTimer(running, b);
+                                      break;
        case 90: r =  getc();          break;
        case 91: color=running->pid+11;
                 r =  putc(b);         break;       

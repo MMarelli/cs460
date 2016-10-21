@@ -1,14 +1,14 @@
 // ucode.c file
 
 char *cmd[]={"getpid", "ps", "chname", "kmode", "switch", "wait", "exit", 
-             "fork", "exec", 0};
+             "fork", "exec", "itimer", 0};
 
 int show_menu()
 {
-   printf("********************* Menu ***************************\n");
-   printf("* ps  chname  kmode  switch  wait  exit  fork  exec  *\n");
-   /*         1     2      3      4      5     6     7     8      */
-   printf("******************************************************\n");
+   printf("********************* Menu ***********************************\n");
+   printf("* ps  chname  kmode  switch  wait  exit  fork  exec   itimer *\n");
+   /*         1     2      3      4      5     6     7     8      9     */
+   printf("**************************************************************\n");
 }
 
 int find_cmd(char *name)
@@ -26,17 +26,12 @@ int find_cmd(char *name)
 
 int getpid()
 {
-   return syscall(0,0,0, 0);
-}
-
-int getppid()
-{
-  return syscall(9,0,0, 0);
+   return syscall(0,0,0);
 }
 
 int ps()
 {
-   syscall(1, 0, 0, 0);
+   syscall(1, 0, 0);
 }
 
 int chname()
@@ -44,21 +39,21 @@ int chname()
     char s[64];
     printf("input new name : ");
     gets(s);
-    syscall(2, s, 0, 0);
+    syscall(2, s, 0);
 }
 
 int kmode()
 {
     printf("kmode : enter Kmode via INT 80\n");
     printf("proc %d going K mode ....\n", getpid());
-        syscall(3, 0, 0, 0);
+        syscall(3, 0, 0);
     printf("proc %d back from Kernel\n", getpid());
 }    
 
 int kswitch()
 {
     printf("proc %d enter Kernel to switch proc\n", getpid());
-        syscall(4,0,0,0);
+        syscall(4,0,0);
     printf("proc %d back from Kernel\n", getpid());
 }
 
@@ -93,7 +88,7 @@ int fork()
   int child;
   child = syscall(7,0,0,0);
   if (child)
-    printf("parent %d return form fork, child=%d\n", getpid(), child);
+    printf("parent % return form fork, child=%d\n", getpid(), child);
   else
     printf("child %d return from fork, child=%d\n", getpid(), child);
 }
@@ -143,15 +138,10 @@ int putc(char c)
   syscall(91,c,0,0);
 }
 
-/*int gets(char *s)
+int startItimer()
 {
-  char c;
-  int i = 0;
-
-  while(c = getc() != '\n')
-  {
-    s[i] = c;
-    i++;
-  }
-  s[i] = '\0';
-}*/
+  int sleepTime;
+  printf("Sleep for how long? ");
+  sleepTime = atoi(gets());
+  syscall(25,sleepTime,0,0);
+}

@@ -71,10 +71,9 @@ int move_cursor() //move cursor to current position
 //display a char, handle special char '\n','\r','\b'
 int putc(char c)
 {
-	u16 w, pos, i;
+	u16 w, pos;
 	if(c=='\n')
 	{
-		row++;
 		while(column < 80)
 		{
 			pos = 2*(row*80 + column);
@@ -82,7 +81,7 @@ int putc(char c)
 			put_word(0x0700, base, offset);
 			column++;
 		}
-
+		row++;
 		if(row>=25)
 		{
 			row = 24;

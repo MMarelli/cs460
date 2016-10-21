@@ -58,8 +58,6 @@ int scheduler()
     }
     running = dequeue(&readyQueue);
     running->status = RUNNING;
-    running->time = 5;
-    goUmode();
 }
 
 int int80h(), tinth();
@@ -78,27 +76,22 @@ main()
     printf("MTX starts in main()\n");
     init();      // initialize and create P0 as running
     set_vec(80,int80h);
-    
+
     kfork("/bin/u1");     // P0 kfork() P1
-    kfork("/bin/u1");     // P0 kfork() P2
-    kfork("/bin/u1");     // P0 kfork() P3
-    kfork("/bin/u1");     // P0 kfork() P4
-    /*
-    exec("/bin/u1");     // P0 exec() P1
-    exec("/bin/u1");     // P0 exec() P2
-    exec("/bin/u1");     // P0 exec() P3
-    exec("/bin/u1");     // P0 exec() P4
-    */
     lock();
     set_vec(8,tinth);
     timer_init();
-
+    
     while(1){
-      printf("P0 running\n");
-      if (nproc==2 && proc[1].status != READY)
-	       printf("no runable process, system halts\n");
-      while(!readyQueue);
-      printf("P0 switch process\n");
-      tswitch();   // P0 switch to run P1
-   }
+        printf("P0 running\n");
+        if (nproc==2 && proc[1].status != READY)
+        {
+            printf("no runable process\n");
+        }
+        else
+        {
+            printf("P0 switch process\n");
+            tswitch();   // P0 switch to run P1
+        }
+    }
 }
