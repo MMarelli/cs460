@@ -61,12 +61,12 @@ int ksin(char *y)
   int i = 0;
   char in[64];
 
-  len = sgetline(0, in);
+  len = sgetline(&stty[0], in);
 
   do
   {
     put_byte(in[i++], running->uss, y++);
-  } while (in[i] != '\0');
+  } while (in[i]);
 
   return len;
 }

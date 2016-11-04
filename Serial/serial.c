@@ -203,7 +203,6 @@ int do_rx(struct stty *tty)   /* interrupts already disabled */
 { 
   int c;
   c = in_byte(tty->port) & 0x7F;  /* read the ASCII char from port */
-  printf("port %x interrupt:c=%c ", tty->port, c,c);
 
   if(tty->inchars.value >= BUFLEN) //inbuf is full
   {
@@ -222,23 +221,26 @@ int do_rx(struct stty *tty)   /* interrupts already disabled */
   tty->inhead %= BUFLEN;            // advance inhead
 
   V(&tty->inchars);                 // inc inchars and unblock sgetc()
+  if(c == '\r')
+  {
+    sputc(tty, '\n');
+  }
+  else
+  {
+    sputc(tty, c);
+  }
 }      
      
 int sgetc(struct stty *tty)
 { 
-  int c;
+  char c;
 
-  if (!tty->tx_on)
-    enable_tx(tty);
-  
   // write Code to get a char from inbuf[ ]
   P(&tty->inchars);                 // wait if no input char yet
-
   lock();                           // disable interrupts
   c = tty->inbuf[tty->intail++];
   tty->intail %= BUFLEN;
   unlock();
-
   return(c);
 }
 
@@ -252,7 +254,7 @@ int sgetline(struct stty *tty, char *line)
   {
     c = sgetc(tty);
     line[i] = c;
-  } while (line[i++] != '\0');
+  } while (line[i++] != '\r');
 
   return strlen(line);
 }
@@ -263,7 +265,7 @@ int do_tx(struct stty *tty)
 {
   char c;
   printf("tx interrupt\n");
-  if (tty->outtail == tty->outhead){ // nothing to do 
+  if (tty->outtail == tty->outhead){ // nothing to do
      disable_tx(tty);                 // turn off tx interrupt
      return;
   }

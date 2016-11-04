@@ -30,7 +30,6 @@ int init()
 {
     PROC *p; int i,j;
     color = 0x0C;
-    printf("\nIn 5...4...3...2...1...\n\n");
 
     for(i = 0; i < NOFT; i++)
     {
@@ -73,7 +72,6 @@ int init()
     p->parent = p;
     running = p;
     nproc = 1;
-    printf("And we're live!\n\n");
 } 
 
 int scheduler()
@@ -95,7 +93,6 @@ int s0inth();
 
 main()
 {
-    printf("\n\nWelcome to Wayne's World!\n");
     init();      // initialize and create P0 as running
     set_vector(80, int80h);
     sinit();
