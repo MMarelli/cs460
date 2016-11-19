@@ -1,0 +1,3 @@
+#Working user programs init
+sudo ./mku init
+sudo ./mku login

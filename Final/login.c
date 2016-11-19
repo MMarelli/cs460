@@ -59,7 +59,7 @@ main(int argc, char *argv[])   // invoked by exec("login /dev/ttyxx")
           i = 0;
         }
       }
-      if(!buf[i])
+      if(!buf[i] || buf[i] == EOF)
       {
         end = 1;
       }
@@ -67,13 +67,13 @@ main(int argc, char *argv[])   // invoked by exec("login /dev/ttyxx")
 
       //evaluate line
       printf("LOGIN : Evaluating Line: %s\n", line);
-      token = strtok(line, ':');
+      token = strtok(line, ":");
       printf("LOGIN : Comparing username : %s\n", token);
       if(!strcmp(token, myname)) //username found
       {
         printf("LOGIN : Found User\n");
-        token = strtok(0, ':'); //token is user passwd
-        if(strcmp(token, passwd))
+        token = strtok(0, ":"); //token is user passwd
+        if(!strcmp(token, passwd))
         {
           verified = 1;
         }
@@ -86,16 +86,19 @@ main(int argc, char *argv[])   // invoked by exec("login /dev/ttyxx")
     {
       printf("LOGIN : Verified\n");
       //    setuid to user uid.
-      token = strtok(line, ':'); //group id
+      token = strtok(0, ":"); //group id
       gid = atoi(token);
-      token = strtok(line, ':'); //user id
+      token = strtok(0, ":"); //user id
       uid = atoi(token);
-        //  chdir to user HOME directory.
-      token = strtok(line, ':'); //full name
-      token = strtok(line, ':'); //home dir
+      chuid(uid, gid);
+
+      //  chdir to user HOME directory.
+      token = strtok(0, ":"); //full name
+      token = strtok(0, ":"); //home dir
       chdir(token);
-          //exec to the program in users's account
-      token = strtok(line, ':'); //program to run
+      
+      //exec to the program in users's account
+      token = strtok(0, ":"); //program to run
       exec(token); //process runs the user program will return 
     } 
     else
