@@ -8,7 +8,7 @@
 #define TTYS0 1
 #define TTYS1 2
 
-int pid, dev1, dev2, dev3, status;
+int pid = 0, dev1 = 0, dev2 = 0, dev3 = 0, status;
 int stdin, stdout;
 
 #include "ucode.c"  //<========== AS POSTED on class website
