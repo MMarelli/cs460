@@ -1,3 +1,8 @@
 #Working user programs init
 sudo ./mku init
 sudo ./mku login
+sudo ./mku grep
+sudo ./mku more
+sudo ./mku cat
+sudo ./mku l2u
+sudo ./mku cp
