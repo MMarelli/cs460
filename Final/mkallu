@@ -6,4 +6,4 @@ sudo ./mku more
 sudo ./mku cat
 sudo ./mku l2u
 sudo ./mku cp
-suod ./mku sh
+sudo ./mku sh

@@ -1,3 +1,11 @@
+/***************************
+Programer: Michael Marelli
+Class: CS460
+Project: Final
+Date: 12/9/2016
+File: init.c
+****************************/
+
 //*************************************************************************
 //                      Logic of init.c 
 // NOTE: this init.c creates only ONE login process on console=/dev/tty0

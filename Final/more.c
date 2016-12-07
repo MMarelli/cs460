@@ -1,5 +1,35 @@
+/***************************
+Programer: Michael Marelli
+Class: CS460
+Project: Final
+Date: 12/9/2016
+File: more.c
+****************************/
+
 #include "ucode.c"
-#include "helper.c"
+
+int readLine(int in, char*buf)
+{
+	int ok, i = 0;
+	char c;
+	while(1)
+	{
+		ok = read(in, &c, 1);
+		if(!ok)
+		{
+			return 0;
+		}
+		if(c == '\n' || c == '\r')
+		{
+			buf[i++] = '\n';
+			return i;
+		}
+		else
+		{
+			buf[i++] = c;
+		}
+	}
+}
 
 main(int argc, char** argv)
 {

@@ -1,3 +1,10 @@
+/***************************
+Programer: Michael Marelli
+Class: CS460
+Project: Final
+Date: 12/9/2016
+File: cat.c
+****************************/
 #include "ucode.c"
 
 main(int argc, char *argv[])
@@ -10,7 +17,6 @@ main(int argc, char *argv[])
 	out = open(tty, O_WRONLY); //write to stdout
 	in = 0; //use the stdin uless a file is passed in
 
-	//this is adding extra characters when doing cat file > file
 	if(argc >= 2) //file(s) provided to us
 	{
 		for(j = 1; j < argc; j++)

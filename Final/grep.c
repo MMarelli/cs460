@@ -1,4 +1,34 @@
+/***************************
+Programer: Michael Marelli
+Class: CS460
+Project: Final
+Date: 12/9/2016
+File: grep.c
+****************************/
 #include "ucode.c"
+
+int readLine(int in, char*buf)
+{
+	int ok, i = 0;
+	char c;
+	while(1)
+	{
+		ok = read(in, &c, 1);
+		if(!ok)
+		{
+			return 0;
+		}
+		if(c == '\n' || c == '\r')
+		{
+			buf[i++] = '\n';
+			return i;
+		}
+		else
+		{
+			buf[i++] = c;
+		}
+	}
+}
 
 main(int argc, char** argv)
 {
@@ -12,23 +42,15 @@ main(int argc, char** argv)
 		in = open(argv[2], O_RDONLY);
 	}
 
-	while(read(in, &c, 1))
-	{		
-		if(c == '\n' || c == '\r')
+	while(readLine(in, buf))
+	{
+		if(strstr(buf, argv[1]))
 		{
-			buf[i++] = '\n';
-			if(strstr(buf, argv[1]))
-			{
-				write(stdout, buf, i);
-				write(ttyout, "\r", 1);
-			}
-			i = 0;
-			bzero(buf, 1024);
+			write(stdout, buf, strlen(buf));
+			write(ttyout, "\r", 1);
 		}
-		else
-		{
-			buf[i++] = c;
-		}
+		i = 0;
+		bzero(buf, 1024);
 	}
 
 	exit(1);

@@ -1,3 +1,11 @@
+/***************************
+Programer: Michael Marelli
+Class: CS460
+Project: Final
+Date: 12/9/2016
+File: login.c
+****************************/
+
 //***********************************************************************
 //                   LOGIC of login.c file
 //***********************************************************************
@@ -38,7 +46,6 @@ main(int argc, char *argv[])   // invoked by exec("login /dev/ttyxx")
    // 4. read user passwd
     gets(passwd);
    // 5. verify user name and passwd from /etc/passwd file
-    printf("LOGIN : Username: %s Password: %s\n", myname, passwd);
     passfd = open("/etc/passwd", O_RDONLY);
     read(passfd, buf, 1024);
     while(!end)
@@ -66,12 +73,9 @@ main(int argc, char *argv[])   // invoked by exec("login /dev/ttyxx")
       i++; //we want to move past the newline for next time
 
       //evaluate line
-      printf("LOGIN : Evaluating Line: %s\n", line);
       token = strtok(line, ":");
-      printf("LOGIN : Comparing username : %s\n", token);
       if(!strcmp(token, myname)) //username found
       {
-        printf("LOGIN : Found User\n");
         token = strtok(0, ":"); //token is user passwd
         if(!strcmp(token, passwd))
         {

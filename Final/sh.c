@@ -1,3 +1,10 @@
+/***************************
+Programer: Michael Marelli
+Class: CS460
+Project: Final
+Date: 12/9/2016
+File: sh.c
+****************************/
 #include "ucode.c"
 
 main(int argc, char** argv)
@@ -25,6 +32,7 @@ main(int argc, char** argv)
 			}
 			else
 			{
+				//Need beter protection for su
 				printf("Enter passwd for su:");
 				gets(cmd);
 				if(!strcmp("12345", cmd))
@@ -96,7 +104,6 @@ int do_command(char *cmdLine)
 	int i = 0;
 	char *file;
 
-	printf("command line given %s\n", cmdLine);
 	while(cmdLine[i])
 	{
 		if(cmdLine[i] == '<' || cmdLine[i] == '>')
@@ -162,7 +169,6 @@ int do_command(char *cmdLine)
 		i++;
 	}
 
-	printf("Executing %s\n", cmdLine);
 	exec(cmdLine);
 }
 
